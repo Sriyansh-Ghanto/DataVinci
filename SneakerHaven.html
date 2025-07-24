@@ -1,13 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PSM9V2V3');</script>
-<!-- End Google Tag Manager -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sneaker Haven</title>
@@ -119,10 +112,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </script>
 </head>
 <body class="bg-gray-100 text-gray-800">
-    <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PSM9V2V3"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
 
     <div id="overlay" class="overlay fixed inset-0 bg-black z-40"></div>
 
@@ -161,7 +150,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </ul>
             </nav>
             <div class="flex items-center space-x-4">
-                <button class="text-gray-600 hover:text-blue-600 focus:outline-none">
+                <button id="searchIcon" class="text-gray-600 hover:text-blue-600 focus:outline-none">
                     <i class="fas fa-search text-xl"></i>
                 </button>
                 <button id="cartIcon" class="text-gray-600 hover:text-blue-600 focus:outline-none relative md:hidden">
@@ -262,6 +251,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const navLinks = document.querySelectorAll('.nav-link');
         const pageContents = document.querySelectorAll('.page-content');
         const proceedToCheckoutBtn = document.getElementById('proceedToCheckoutBtn');
+        const searchIconBtn = document.getElementById('searchIcon'); // Added search icon button
 
         // Image Slider Elements
         const sliderImages = document.querySelectorAll('.slider-image');
@@ -318,7 +308,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             // Push view_bestsellers event if navigating to bestsellers page
             if (pageId === 'bestsellers') {
                 window.dataLayer.push({
-                    event: 'view_bestsellers'
+                    event: 'view_bestsellers',
+                    event_category: 'Navigation',
+                    event_action: 'View Page',
+                    event_label: 'Bestsellers Page'
                 });
                 console.log('DataLayer Push: view_bestsellers');
             }
@@ -437,6 +430,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             // Data Layer Push: add_to_cart
             window.dataLayer.push({
                 event: 'add_to_cart',
+                event_category: 'Ecommerce',
+                event_action: 'Add to Cart',
+                event_label: product.name,
                 ecommerce: {
                     items: [{
                         item_id: product.id.toString(),
@@ -448,6 +444,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 }
             });
             console.log('DataLayer Push: add_to_cart', {
+                event_category: 'Ecommerce',
+                event_action: 'Add to Cart',
+                event_label: product.name,
                 item_id: product.id.toString(),
                 item_name: product.name,
                 price: product.price,
@@ -492,6 +491,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     if (change > 0) {
                         window.dataLayer.push({
                             event: 'add_to_cart', // Reuse add_to_cart for quantity increase
+                            event_category: 'Ecommerce',
+                            event_action: 'Add to Cart (Quantity Update)',
+                            event_label: `${product.name} - Quantity Increased`,
                             ecommerce: {
                                 items: [{
                                     item_id: product.id.toString(),
@@ -503,6 +505,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             }
                         });
                         console.log('DataLayer Push: add_to_cart (quantity update)', {
+                            event_category: 'Ecommerce',
+                            event_action: 'Add to Cart (Quantity Update)',
+                            event_label: `${product.name} - Quantity Increased`,
                             item_id: product.id.toString(),
                             item_name: product.name,
                             price: product.price,
@@ -512,6 +517,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     } else if (change < 0) {
                         window.dataLayer.push({
                             event: 'remove_from_cart', // Reuse remove_from_cart for quantity decrease
+                            event_category: 'Ecommerce',
+                            event_action: 'Remove from Cart (Quantity Update)',
+                            event_label: `${product.name} - Quantity Decreased`,
                             ecommerce: {
                                 items: [{
                                     item_id: product.id.toString(),
@@ -523,6 +531,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             }
                         });
                         console.log('DataLayer Push: remove_from_cart (quantity update)', {
+                            event_category: 'Ecommerce',
+                            event_action: 'Remove from Cart (Quantity Update)',
+                            event_label: `${product.name} - Quantity Decreased`,
                             item_id: product.id.toString(),
                             item_name: product.name,
                             price: product.price,
@@ -556,6 +567,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     // Data Layer Push: remove_from_cart
                     window.dataLayer.push({
                         event: 'remove_from_cart',
+                        event_category: 'Ecommerce',
+                        event_action: 'Remove from Cart',
+                        event_label: product.name,
                         ecommerce: {
                             items: [{
                                 item_id: product.id.toString(),
@@ -567,6 +581,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         }
                     });
                     console.log('DataLayer Push: remove_from_cart', {
+                        event_category: 'Ecommerce',
+                        event_action: 'Remove from Cart',
+                        event_label: product.name,
                         item_id: product.id.toString(),
                         item_name: product.name,
                         price: product.price,
@@ -584,6 +601,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 // Data Layer Push: remove_from_cart (fallback)
                 window.dataLayer.push({
                     event: 'remove_from_cart',
+                    event_category: 'Ecommerce',
+                    event_action: 'Remove from Cart',
+                    event_label: product.name,
                     ecommerce: {
                         items: [{
                             item_id: product.id.toString(),
@@ -595,6 +615,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     }
                 });
                 console.log('DataLayer Push: remove_from_cart (fallback)', {
+                    event_category: 'Ecommerce',
+                    event_action: 'Remove from Cart',
+                    event_label: product.name,
                     item_id: product.id.toString(),
                     item_name: product.name,
                     price: product.price,
@@ -612,6 +635,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         function openSideNav() {
             sideNav.classList.add('open');
             overlay.classList.add('open');
+            window.dataLayer.push({
+                event: 'ui_interaction',
+                event_category: 'UI Interaction',
+                event_action: 'Open Side Navigation',
+                event_label: 'Hamburger Icon Click',
+                element_id: 'openNav',
+                element_class: openNavBtn.classList.value
+            });
+            console.log('DataLayer Push: Open Side Navigation');
         }
 
         /**
@@ -620,6 +652,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         function closeSideNav() {
             sideNav.classList.remove('open');
             overlay.classList.remove('open');
+            window.dataLayer.push({
+                event: 'ui_interaction',
+                event_category: 'UI Interaction',
+                event_action: 'Close Side Navigation',
+                event_label: 'Close Button Click',
+                element_id: 'closeNav',
+                element_class: closeNavBtn.classList.value
+            });
+            console.log('DataLayer Push: Close Side Navigation');
         }
 
         // --- Image Slider Functions ---
@@ -685,6 +726,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 const page = link.dataset.page;
                 if (page) {
                     changePage(page);
+                    // Data Layer Push for navigation clicks
+                    window.dataLayer.push({
+                        event: 'navigation_click',
+                        event_category: 'Navigation',
+                        event_action: 'Click',
+                        event_label: `${link.textContent.trim()} Link`,
+                        element_id: link.id || '', // Use link's ID if available
+                        element_class: link.classList.value,
+                        destination_page: page
+                    });
+                    console.log(`DataLayer Push: navigation_click - ${page}`);
                 }
             });
         });
@@ -694,6 +746,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             dot.addEventListener('click', () => {
                 showSlide(index);
                 resetSliderInterval(); // Reset timer on manual navigation
+                window.dataLayer.push({
+                    event: 'ui_interaction',
+                    event_category: 'UI Interaction',
+                    event_action: 'Click',
+                    event_label: `Slider Dot ${index + 1}`,
+                    element_class: dot.classList.value
+                });
+                console.log(`DataLayer Push: Slider Dot Click - ${index + 1}`);
             });
         });
 
@@ -712,6 +772,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
             window.dataLayer.push({
                 event: 'begin_checkout',
+                event_category: 'Ecommerce',
+                event_action: 'Begin Checkout',
+                event_label: 'Cart Checkout Initiation',
                 ecommerce: {
                     items: itemsForCheckout
                 }
@@ -722,6 +785,33 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             // In a real application, you would redirect to a checkout page or initiate a checkout process.
         });
 
+        // Search Icon click event listener
+        searchIconBtn.addEventListener('click', () => {
+            window.dataLayer.push({
+                event: 'ui_interaction',
+                event_category: 'UI Interaction',
+                event_action: 'Click',
+                event_label: 'Search Icon',
+                element_id: 'searchIcon',
+                element_class: searchIconBtn.classList.value
+            });
+            console.log('DataLayer Push: Search Icon Click');
+            alert('Search functionality coming soon!');
+        });
+
+        // Mobile Cart Icon click event listener
+        cartIcon.addEventListener('click', () => {
+            changePage('cart'); // Navigate to cart page
+            window.dataLayer.push({
+                event: 'ui_interaction',
+                event_category: 'UI Interaction',
+                event_action: 'Click',
+                event_label: 'Mobile Cart Icon',
+                element_id: 'cartIcon',
+                element_class: cartIcon.classList.value
+            });
+            console.log('DataLayer Push: Mobile Cart Icon Click');
+        });
 
         // Initial setup on window load
         window.onload = function() {
@@ -731,6 +821,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             renderCartItems(); // Render cart on load, though it's hidden initially
             showSlide(0); // Show the first slide
             startSlider(); // Start the automatic slider
+
+            // Data Layer Push: Page Load event (for initial page view)
+            window.dataLayer.push({
+                event: 'page_view',
+                page_path: window.location.pathname,
+                page_title: document.title,
+                event_category: 'Page View',
+                event_action: 'Load',
+                event_label: 'Initial Page Load'
+            });
+            console.log('DataLayer Push: Page View - Initial Load');
         };
     </script>
 </body>
