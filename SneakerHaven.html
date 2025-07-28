@@ -116,6 +116,67 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
     <script>
         window.dataLayer = window.dataLayer || [];
+        // Function to get a cookie by name
+function getCookie(name) {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for(let i=0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+
+// Function to set a cookie
+function setCookie(name, value, days) {
+    let expires = "";
+    if (days) {
+        const date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "")  + expires + "; path=/; SameSite=Lax";
+}
+
+
+// --- User ID Logic ---
+function generateUUID() {
+    // A simple function to generate a V4 UUID (random)
+    // For more robust UUIDs, consider a library like 'uuid'
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+function initializeUserId() {
+    const userIdCookieName = "analytics_user_id"; // A descriptive name for your cookie
+    let userId = getCookie(userIdCookieName);
+
+    if (!userId) {
+        // No existing user ID, generate a new one
+        userId = generateUUID();
+        // Set the cookie for, e.g., 365 days (1 year)
+        setCookie(userIdCookieName, userId, 365);
+        console.log("New User ID generated and set:", userId);
+    } else {
+        console.log("Existing User ID found:", userId);
+    }
+
+    // Push the user_id to the Data Layer
+    // It's common to set this as a top-level key for easy access in GTM
+    window.dataLayer.push({
+        'user_id': userId,
+        'event': 'user_id_set' // Custom event to trigger a GTM tag
+    });
+    console.log('DataLayer Push: user_id_set', { 'user_id': userId });
+
+    return userId; // Return the user ID if needed elsewhere
+}
+
+// Call the function to initialize the user ID when the page loads
+initializeUserId();
     </script>
 </head>
 <body class="bg-gray-100 text-gray-800">
